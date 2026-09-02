@@ -1,6 +1,7 @@
 {
   "name": "keynote-harvest-mcp",
-  "version": "0.1.0",
+  "mcpName": "io.github.hulin42/keynote-harvest-mcp",
+  "version": "0.1.1",
   "description": "MCP server that harvests slide decks into previews, extracted text, embedded-image assets, and a versioned manifest. PDF-first on any platform; native .key export via Keynote on macOS.",
   "keywords": [
     "mcp",

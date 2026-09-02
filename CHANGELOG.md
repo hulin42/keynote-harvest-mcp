@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-09-02
+
+- Adds `mcpName` (`io.github.hulin42/keynote-harvest-mcp`) and a `server.json`
+  for the official MCP Registry listing. No runtime changes.
+
 ## 0.1.0 - 2026-09-02
 
 - Exposes five harvest-first MCP tools: `list_keynote_apps`,
