@@ -1,0 +1,34 @@
+name: MCP Registry
+
+# Publishes server.json to the official MCP Registry using GitHub OIDC.
+# Runs after a v* tag (once the npm package is live) and on demand.
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  publish-listing:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # registry authentication (github-oidc); no secret
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --version
+      - name: Registry package version must be live on npm
+        run: |
+          expected="$(node -p "require('./server.json').packages[0].version")"
+          live="$(npm view keynote-harvest-mcp@"$expected" version)"
+          [ "$live" = "$expected" ] || { echo "keynote-harvest-mcp@$expected is not on npm" >&2; exit 1; }
+      - run: ./mcp-publisher validate
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish
