@@ -43,14 +43,13 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-          registry-url: https://registry.npmjs.org
+      # Trusted publishing (OIDC) needs npm >= 11.5; Node 22 bundles npm 10.
+      # No registry-url / NODE_AUTH_TOKEN here: an .npmrc with an empty token
+      # makes npm fail with ENEEDAUTH before it ever tries OIDC.
+      - run: npm install -g npm@latest
+      - run: npm --version
       - run: npm ci
-      # prepack runs the full test suite as the final gate. NPM_TOKEN is
-      # needed only for the first publish (npm cannot attach a trusted
-      # publisher to a package that does not exist yet); once the package
-      # exists and the trusted publisher is configured, delete the secret
-      # and npm authenticates via OIDC. Provenance comes from GitHub's OIDC
-      # either way.
+      # prepack runs the full test suite as the final gate. Auth comes from
+      # the npm trusted publisher (hulin42/keynote-harvest-mcp, release.yml)
+      # via the job's OIDC token; provenance is attested from the same token.
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
