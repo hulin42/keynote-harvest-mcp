@@ -61,33 +61,13 @@ The built server and tools execute JavaScript from `dist/`; they do not execute 
 
 ## Quickstart
 
-Until the package is published, build it locally and point each stdio MCP host
-at the compiled entrypoint:
-
-```bash
-cd /absolute/path/to/keynote-harvest-mcp
-npm ci
-npm run build
-```
-
-Replace `/absolute/path/to/node` with the output of `command -v node`. GUI
-hosts should use that absolute executable path because they may not inherit
-your shell's PATH.
+The package is on npm. Point each stdio MCP host at `npx -y keynote-harvest-mcp`;
+the first run downloads it, later runs use the cache. GUI hosts may not
+inherit your shell's PATH, so give them the absolute `npx` executable
+(`command -v npx`). To run from a local checkout instead, see "Local build"
+at the end of this section.
 
 ### Claude Code
-
-Local build:
-
-```bash
-claude mcp add keynote-harvest \
-  -e KEYNOTE_HARVEST_WORKING_DIRECTORY=/path/to/your/working-directory \
-  -e KEYNOTE_HARVEST_ROOT=.harvests \
-  -e KEYNOTE_HARVEST_ALLOWED_INPUT_ROOTS=/path/to/your/decks \
-  -- /absolute/path/to/node \
-  /absolute/path/to/keynote-harvest-mcp/dist/index.js
-```
-
-After publish:
 
 ```bash
 claude mcp add keynote-harvest \
@@ -102,15 +82,15 @@ project, and verify the registration with `claude mcp get keynote-harvest`.
 
 ### Claude Desktop
 
-For a local build, add this server to `claude_desktop_config.json` through
-Claude Desktop's developer settings, then restart the application:
+Add this server to `claude_desktop_config.json` through Claude Desktop's
+developer settings, then fully quit and relaunch the application:
 
 ```json
 {
   "mcpServers": {
     "keynote-harvest": {
-      "command": "/absolute/path/to/node",
-      "args": ["/absolute/path/to/keynote-harvest-mcp/dist/index.js"],
+      "command": "/absolute/path/to/npx",
+      "args": ["-y", "keynote-harvest-mcp"],
       "env": {
         "KEYNOTE_HARVEST_WORKING_DIRECTORY": "/path/to/your/working-directory",
         "KEYNOTE_HARVEST_ROOT": ".harvests",
@@ -121,29 +101,20 @@ Claude Desktop's developer settings, then restart the application:
 }
 ```
 
-After publish, replace `command` and `args` with an absolute `npx` executable
-and the package invocation:
-
-```json
-{
-  "command": "/absolute/path/to/npx",
-  "args": ["-y", "keynote-harvest-mcp"]
-}
-```
-
-Keep the same `env` object in the published configuration.
+Claude Desktop stops every tool call at roughly four minutes, so harvest
+long decks with `runInBackground: true` and poll `get_harvest_manifest`.
 
 ### Cursor
 
-For a local build, create `.cursor/mcp.json` in a project, or
-`~/.cursor/mcp.json` for a global configuration:
+Create `.cursor/mcp.json` in a project, or `~/.cursor/mcp.json` for a global
+configuration:
 
 ```json
 {
   "mcpServers": {
     "keynote-harvest": {
-      "command": "/absolute/path/to/node",
-      "args": ["/absolute/path/to/keynote-harvest-mcp/dist/index.js"],
+      "command": "/absolute/path/to/npx",
+      "args": ["-y", "keynote-harvest-mcp"],
       "env": {
         "KEYNOTE_HARVEST_WORKING_DIRECTORY": "/path/to/your/working-directory",
         "KEYNOTE_HARVEST_ROOT": ".harvests",
@@ -154,8 +125,6 @@ For a local build, create `.cursor/mcp.json` in a project, or
 }
 ```
 
-After publish, replace `command` and `args` as shown in the Claude Desktop
-published configuration. Keep the same `env` object.
 
 ### Codex CLI
 
@@ -166,7 +135,7 @@ codex mcp add keynote-harvest \
   --env KEYNOTE_HARVEST_WORKING_DIRECTORY=/path/to/your/working-directory \
   --env KEYNOTE_HARVEST_ROOT=.harvests \
   --env KEYNOTE_HARVEST_ALLOWED_INPUT_ROOTS=/path/to/your/decks \
-  -- /absolute/path/to/node /absolute/path/to/keynote-harvest-mcp/dist/index.js
+  -- npx -y keynote-harvest-mcp
 ```
 
 Two Codex behaviors to know: the harvest and export tools are annotated
@@ -177,6 +146,19 @@ exposes MCP tools only, not resources; read results through
 `get_harvest_manifest` and the harvest directory. Codex's default per-call limit is 300 s; raise it
 for long decks with `mcp_servers.keynote-harvest.tool_timeout_sec`, or use
 `runInBackground: true` and poll.
+
+### Local build
+
+To run from a checkout instead of npm:
+
+```bash
+cd /absolute/path/to/keynote-harvest-mcp
+npm ci
+npm run build
+```
+
+Then use `/absolute/path/to/node /absolute/path/to/keynote-harvest-mcp/dist/index.js`
+as the command in any of the configurations above, keeping the same `env`.
 
 ### Not supported: ChatGPT
 
