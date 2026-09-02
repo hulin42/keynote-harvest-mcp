@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "keynote-harvest-manifest-v1",
+  "id": "synthetic-two-slide-harvest",
+  "deckTitle": "Synthetic Harvest Example",
+  "source": {
+    "id": "synthetic-source",
+    "kind": "pdf",
+    "title": "Synthetic Harvest Example",
+    "displayName": "synthetic-harvest-example.pdf",
+    "redactedSourceFileName": "synthetic-harvest-example.pdf",
+    "harvestedAt": "2026-01-01T00:00:00.000Z",
+    "tool": "synthetic-fixture"
+  },
+  "harvestedAt": "2026-01-01T00:00:00.000Z",
+  "slideCount": 2,
+  "slideDimensions": {
+    "width": 1440,
+    "height": 810,
+    "aspectRatio": "16:9"
+  },
+  "slides": [
+    {
+      "id": "slide-001",
+      "index": 1,
+      "title": "A synthetic title",
+      "dimensions": {
+        "width": 1440,
+        "height": 810,
+        "aspectRatio": "16:9"
+      },
+      "preview": {
+        "id": "preview-slide-001",
+        "slideId": "slide-001",
+        "path": "keynote-harvest://synthetic-two-slide-harvest/previews/slide-001.png",
+        "mimeType": "image/png"
+      },
+      "textRuns": [
+        {
+          "id": "slide-001-text-001",
+          "text": "A synthetic title",
+          "role": "title",
+          "source": "pdf-text",
+          "confidence": 1
+        }
+      ],
+      "assetIds": []
+    },
+    {
+      "id": "slide-002",
+      "index": 2,
+      "title": "A synthetic outcome",
+      "dimensions": {
+        "width": 1440,
+        "height": 810,
+        "aspectRatio": "16:9"
+      },
+      "textRuns": [
+        {
+          "id": "slide-002-text-001",
+          "text": "A synthetic outcome",
+          "role": "title",
+          "source": "pdf-text",
+          "confidence": 1
+        }
+      ],
+      "assetIds": []
+    }
+  ],
+  "assets": [],
+  "warnings": []
+}

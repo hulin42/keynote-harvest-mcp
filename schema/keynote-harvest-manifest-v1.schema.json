@@ -1,0 +1,371 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://keynote-harvest.local/schema/keynote-harvest-manifest-v1.schema.json",
+  "title": "Keynote Harvest Manifest v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "deckTitle",
+    "source",
+    "harvestedAt",
+    "slideCount",
+    "slideDimensions",
+    "slides",
+    "assets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "keynote-harvest-manifest-v1"
+    },
+    "id": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "deckTitle": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "harvestedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "slideCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "slideDimensions": {
+      "$ref": "#/$defs/dimensions"
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/slide"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/warning"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nullableResourcePath": {
+      "type": ["string", "null"]
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["width", "height", "aspectRatio"],
+      "properties": {
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "aspectRatio": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": true
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "kind", "harvestedAt", "tool"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "enum": ["keynote", "pdf", "edited-pdf", "unknown"]
+        },
+        "title": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "sourceFilePath": {
+          "type": "string",
+          "description": "Optional local/debug path. MCP display responses redact this field by default."
+        },
+        "redactedSourceFileName": {
+          "type": "string"
+        },
+        "harvestedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tool": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "manuallyEditedPdfArtifact": {
+          "type": "boolean"
+        },
+        "export": {
+          "$ref": "#/$defs/exportMetadata"
+        }
+      },
+      "additionalProperties": true
+    },
+    "exportMetadata": {
+      "type": "object",
+      "required": ["sourceKind"],
+      "properties": {
+        "sourceKind": {
+          "enum": ["keynote", "pdf", "edited-pdf", "unknown"]
+        },
+        "sourceDisplayName": {
+          "type": "string"
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "Optional local/debug path. MCP display responses redact this field by default."
+        },
+        "redactedSourceFileName": {
+          "type": "string"
+        },
+        "exportedPdfPath": {
+          "type": "string",
+          "description": "Internal local pipeline path. MCP resources are the portable artifact identity."
+        },
+        "redactedExportedPdfFileName": {
+          "type": "string"
+        },
+        "exportedAt": {
+          "type": "string"
+        },
+        "exportTool": {
+          "type": "string"
+        },
+        "selectedKeynoteAppPath": {
+          "type": "string",
+          "description": "Optional local/debug path. MCP display responses redact this field by default."
+        },
+        "selectedKeynoteAppName": {
+          "type": "string"
+        },
+        "selectedKeynoteAppVersion": {
+          "type": "string"
+        },
+        "selectedKeynoteAppBundleId": {
+          "type": "string"
+        },
+        "appSelectionSource": {
+          "enum": ["cli", "env", "discovered", "fallback"]
+        },
+        "appSelectionWarnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exportStatus": {
+          "enum": ["completed", "completed-with-warning", "failed"]
+        },
+        "exportWarnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pdfPageCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pdfSizeBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pdfModifiedAt": {
+          "type": "string"
+        },
+        "timedOut": {
+          "type": "boolean"
+        },
+        "manuallyEditedPdfArtifact": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "preview": {
+      "type": "object",
+      "required": ["id", "slideId", "path"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "slideId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "$ref": "#/$defs/nullableResourcePath"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "checksum": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "textRun": {
+      "type": "object",
+      "required": ["id", "text"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "text": {
+          "type": "string"
+        },
+        "role": {
+          "enum": ["title", "subtitle", "body", "caption", "label", "unknown"]
+        },
+        "source": {
+          "enum": ["pdf-text", "ocr-text", "vision-observation", "manual", "unknown"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "redacted": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "slide": {
+      "type": "object",
+      "required": ["id", "index", "dimensions", "textRuns", "assetIds"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/dimensions"
+        },
+        "preview": {
+          "$ref": "#/$defs/preview"
+        },
+        "textRuns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/textRun"
+          }
+        },
+        "assetIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/warning"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "kind", "path", "sourceSlideId"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "enum": ["embedded-image", "video", "shape-render", "unknown"]
+        },
+        "path": {
+          "$ref": "#/$defs/nullableResourcePath"
+        },
+        "sourceSlideId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "checksum": {
+          "type": "string"
+        },
+        "redacted": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "warning": {
+      "type": "object",
+      "required": ["id", "code", "severity", "message"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "code": {
+          "enum": ["missing-preview", "failed-extraction", "unsupported-media", "private-redacted", "unknown"]
+        },
+        "severity": {
+          "enum": ["info", "warning", "error"]
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "slideId": {
+          "type": "string"
+        },
+        "assetId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

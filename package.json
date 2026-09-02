@@ -1,0 +1,66 @@
+{
+  "name": "keynote-harvest-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that harvests slide decks into previews, extracted text, embedded-image assets, and a versioned manifest. PDF-first on any platform; native .key export via Keynote on macOS.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "keynote",
+    "slides",
+    "pdf",
+    "poppler",
+    "harvest",
+    "assets"
+  ],
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hulin42/keynote-harvest-mcp.git"
+  },
+  "homepage": "https://github.com/hulin42/keynote-harvest-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/hulin42/keynote-harvest-mcp/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "files": [
+    "dist",
+    "examples",
+    "schema",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "keynote-harvest-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:built": "node --test test/*.test.mjs",
+    "test:clean-install": "node scripts/clean-install-rehearsal.mjs",
+    "test:packed-runtime": "npm run build && node scripts/packed-runtime-rehearsal.mjs",
+    "test:pdf-runtime": "npm run build && node scripts/pdf-runtime-rehearsal.mjs",
+    "prepack": "npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "zod": "^3.25.76"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
+  }
+}
